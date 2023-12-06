@@ -8,7 +8,7 @@ namespace backend
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+            var AllowSpecificOrigins = "_AllowSpecificOrigins";
             
             
             // Add services to the container.
@@ -16,10 +16,10 @@ namespace backend
 
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy(name: MyAllowSpecificOrigins,
+                options.AddPolicy(name: AllowSpecificOrigins,
                                   policy =>
                                   {
-                                      policy.WithOrigins("http://localhost:4200");
+                                      policy.WithOrigins(builder.Configuration.GetValue<string>("allowedOrigins").Split(";"));
                                   });
             });
 
@@ -28,7 +28,7 @@ namespace backend
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-            app.UseCors(MyAllowSpecificOrigins);
+            app.UseCors(AllowSpecificOrigins);
 
             app.UseAuthorization();
 
